@@ -12,10 +12,11 @@ const mutation = new GraphQLObjectType({
     addSong: {
       type: SongType,
       args: {
-        title: { type: GraphQLString }
+        title: { type: GraphQLString },
+        artist: { type: GraphQLString}
       },
-      resolve(parentValue, { title }) {
-        return (new Song({ title })).save()
+      resolve(parentValue, { title, artist }) {
+        return (new Song({ title, artist })).save()
       }
     },
     addLyricToSong: {

@@ -7,6 +7,7 @@ const SongSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user'
   },
+  artist:  {type: String },
   lyrics: [{
     type: Schema.Types.ObjectId,
     ref: 'lyric'

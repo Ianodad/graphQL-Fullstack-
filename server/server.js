@@ -4,11 +4,12 @@ const { graphqlHTTP } = require('express-graphql');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const schema = require('./schema/schema');
+const path = require('path');
 
 const app = express();
 
 // Replace with your mongoLab URI
-const MONGO_URI = '';
+const MONGO_URI = 'mongodb+srv://adera:1Qwerty@lyricaldb.45uwh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 if (!MONGO_URI) {
   throw new Error('You must provide a MongoLab URI');
 }
@@ -28,6 +29,22 @@ app.use('/graphql', graphqlHTTP({
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack.config.js');
-app.use(webpackMiddleware(webpack(webpackConfig)));
+const compiler = webpack(webpackConfig);
+
+app.use(webpackMiddleware(compiler));
+
+// Fallback when no previous route was matched
+app.use('*', (req, res, next) => {
+  const isHtml = req.path.indexOf('.') < 0 || req.path.indexOf('index.html') > 0;
+  const filename = path.resolve(compiler.outputPath, isHtml ? 'index.html' : `.${req.path}`);
+  compiler.outputFileSystem.readFile(filename, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.set('content-type','text/html');
+    res.send(result);
+    res.end();
+  });
+});
 
 module.exports = app;
