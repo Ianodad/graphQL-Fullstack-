@@ -16,6 +16,10 @@ export const GET_SONG = gql`
       id
       title
       artist
+      lyrics {
+        id
+        content
+      }
   }
 }
 `

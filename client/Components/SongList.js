@@ -27,6 +27,7 @@ const SongList =()=> {
         refetchQueries:[{query: GET_SONG_LIST}]
       })
     }
+    
     if (loading) return <p>Loading...</p>
     const {songs}= data
     console.log(songs)
